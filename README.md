@@ -84,6 +84,9 @@ You can also use the `addEndPoint($methodType, $routeName, Callable $callable)` 
 
 
 After that you should have everything good to go!  
+
+### Note on returning json
+In order to return json in your methods, make sure to use `Flight::json($array)` to create a json response. *DO NOT USE RETURN.* 
   
 Please feel free to contribute to this project!
 
