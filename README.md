@@ -43,15 +43,17 @@ class UserController extends ApiController{
 }
 
 ```
-Lets break class down:
+Lets break class down:  
 `class UserController extends ApiController`  
 All endpoint classes need to extend the ApiController class.
 
 `$mappings`  
-This is the array that you can add to to create api endpoints. The structure is `'methodName' => ['method' => 'get/post/put/delete', 'route' => '/end/point/path']`  
+This is the array that you can add to to create api endpoints. The structure is:  
+`'methodName' => ['method' => 'get/post/put/delete', 'route' => '/end/point/path']`    
 The method name is the name of the method in the class that should be called when the route is hit.  
   
-You can also pass in `crud` to the array to scaffold CRUD route for an Eloquent model. the syntax for that is `'crud' => ['model' => 'namespace/to/model/class', 'resource_name' => 'nameOfRoutePrefix']`  
+You can also pass in `crud` to the array to scaffold CRUD route for an Eloquent model. the syntax for that is:  
+`'crud' => ['model' => 'namespace/to/model/class', 'resource_name' => 'nameOfRoutePrefix']`  
   
 
 
