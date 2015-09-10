@@ -27,6 +27,10 @@ server {
 }
 ```
 
+### Include the project via composer
+
+run `composer require calebdre/api-sugar`  
+  
 #### Create your endpoint class
 Create a class that contains the endpoints and methods for the api:
 ```
