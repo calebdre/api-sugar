@@ -43,7 +43,7 @@ class UserController extends ApiController{
 }
 
 ```
-Lets break class down:
+Lets break class down:  
 `class UserController extends ApiController`  
 All endpoint classes need to extend the ApiController class.
 
