@@ -6,8 +6,9 @@ class CrudTemplate extends ApiController{
     private $resource;
     public $mappings;
     private $eagerRelations;
+    private $paginate;
 
-    public function __construct($model_name, $resource_name = null, $eagerRelations = [])
+    public function __construct($model_name, $resource_name = null, $eagerRelations = [], $paginate = false)
     {
         if(class_exists($model_name)){
             $this->resource = new $model_name();
@@ -21,10 +22,12 @@ class CrudTemplate extends ApiController{
         }
 
         $this->eagerRelations = $eagerRelations;
+        $this->paginate = $paginate;
 
         $this->mappings = [
             'getAll' => ['method' => 'get', 'route' => '/'.$resource_name],
             'getOne' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id'],
+            'getRelation' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id/@relation'],
             'create' => ['method' => 'post', 'route' => '/'.$resource_name],
             'update' => ['method' => 'put', 'route' => '/'.$resource_name],
             'delete' => ['method' => 'delete', 'route' => '/'.$resource_name.'/@id'],
@@ -32,12 +35,15 @@ class CrudTemplate extends ApiController{
     }
 
     public function getAll(){
-        $all = $this->resource->with($this->eagerRelations)->get();
+        if($this->paginate){
+
+        }else{
+            $all = $this->resource->with($this->eagerRelations)->get();
+        }
         Flight::json($all);
     }
 
     public function getOne($id){
-
         $one = $this->resource->find($id);
         if($one == null){
             Flight::json(['error' => 'resource could not be found.']);
@@ -72,5 +78,15 @@ class CrudTemplate extends ApiController{
 
     public function delete($id){
         Flight::json($this->resource->find($id)->delete());
+    }
+
+    private function getRelation($id, $relation)
+    {
+        $one = $this->resource->find($id);
+        if($one == null){
+            Flight::json(['error' => 'resource could not be found.']);
+        }else{
+            Flight::json($one->$relation);
+        }
     }
 }
