@@ -54,11 +54,11 @@ class CrudTemplate extends ApiController{
     }
 
     public function getOne($id){
-        $one = $this->resource->find($id);
+        $one = $this->resource->with($this->eagerRelations)->find($id);
         if($one == null){
             Flight::json(['error' => 'resource could not be found.']);
         }else{
-            Flight::json($one->toArray());
+            Flight::json($one);
         }
 
     }
