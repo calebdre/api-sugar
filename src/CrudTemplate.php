@@ -5,8 +5,9 @@ use \Flight;
 class CrudTemplate extends ApiController{
     private $resource;
     public $mappings;
+    private $eagerRelations;
 
-    public function __construct($model_name, $resource_name = null)
+    public function __construct($model_name, $resource_name = null, $eagerRelations = [])
     {
         if(class_exists($model_name)){
             $this->resource = new $model_name();
@@ -19,6 +20,8 @@ class CrudTemplate extends ApiController{
             $resource_name = substr(strtolower(strrchr($model_name, '\\')), 1);
         }
 
+        $this->eagerRelations = $eagerRelations;
+
         $this->mappings = [
             'getAll' => ['method' => 'get', 'route' => '/'.$resource_name],
             'getOne' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id'],
@@ -29,8 +32,8 @@ class CrudTemplate extends ApiController{
     }
 
     public function getAll(){
-        $all = $this->resource->all();
-        Flight::json($all->all());
+        $all = $this->resource->with($this->eagerRelations)->get();
+        Flight::json($all);
     }
 
     public function getOne($id){

@@ -32,7 +32,8 @@ class Api{
             $this->crud = true;
             $this->addClass(new CrudTemplate(
                 $mappings['crud']['model'],
-                (isset($mappings['crud']['resource_name'])) ? $mappings['crud']['resource_name'] : null
+                (isset($mappings['crud']['resource_name'])) ? $mappings['crud']['resource_name'] : null,
+                (isset($mappings['crud']['eager_relations'])) ? $mappings['crud']['eager_relations']: []
             ));
         }
 
