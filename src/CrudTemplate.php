@@ -22,6 +22,11 @@ class CrudTemplate extends ApiController{
         }
 
         $this->eagerRelations = $eagerRelations;
+
+        if($paginate && !isset($paginate['per_page'])){
+            throw new \Exception("Paginate should have a per_page attribute.");
+        }
+
         $this->paginate = $paginate;
 
         $this->mappings = [
@@ -35,8 +40,13 @@ class CrudTemplate extends ApiController{
     }
 
     public function getAll(){
-        if($this->paginate){
+        $offset = Flight::request()->query["offset"];
+        if($offset == null){
+            $offset = 0;
+        }
 
+        if($this->paginate){
+            $all = $this->resource->with($this->eagerRelations)->limit($this->paginate['per_page'])->offset($offset)->get();
         }else{
             $all = $this->resource->with($this->eagerRelations)->get();
         }
