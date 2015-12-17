@@ -31,11 +31,11 @@ class CrudTemplate extends ApiController{
 
         $this->mappings = [
             'getAll' => ['method' => 'get', 'route' => '/'.$resource_name],
-            'getOne' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id'],
-            'getRelation' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id/@relation'],
+            'getOne' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id:\d*'],
+            'getRelation' => ['method' => 'get', 'route' => '/'.$resource_name.'/@id:\d*/@relation'],
             'create' => ['method' => 'post', 'route' => '/'.$resource_name],
             'update' => ['method' => 'put', 'route' => '/'.$resource_name],
-            'delete' => ['method' => 'delete', 'route' => '/'.$resource_name.'/@id'],
+            'delete' => ['method' => 'delete', 'route' => '/'.$resource_name.'/@id:\d*'],
         ];
     }
 
@@ -47,10 +47,11 @@ class CrudTemplate extends ApiController{
 
         if($this->paginate){
             $all = $this->resource->with($this->eagerRelations)->limit($this->paginate['per_page'])->offset($offset)->get();
+            $all['offset'] = $offset;
         }else{
             $all = $this->resource->with($this->eagerRelations)->get();
         }
-        Flight::json($all);
+        Flight::json(($all->flatten()));
     }
 
     public function getOne($id){
@@ -60,7 +61,6 @@ class CrudTemplate extends ApiController{
         }else{
             Flight::json($one);
         }
-
     }
 
     public function create(){
