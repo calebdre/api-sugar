@@ -7,8 +7,9 @@ class CrudTemplate extends ApiController{
     public $mappings;
     private $eagerRelations;
     private $paginate;
+    private $resourceName;
 
-    public function __construct($model_name, $resource_name = null, $eagerRelations = [], $paginate = false)
+    public function __construct($model_name, $resource_name = null, $eagerRelations = [], $paginate = false, $not = [])
     {
         if(class_exists($model_name)){
             $this->resource = new $model_name();
@@ -19,6 +20,7 @@ class CrudTemplate extends ApiController{
 
         if($resource_name == null || empty($resource_name)){
             $resource_name = substr(strtolower(strrchr($model_name, '\\')), 1);
+            $this->resourceName = $resource_name;
         }
 
         $this->eagerRelations = $eagerRelations;
@@ -37,6 +39,11 @@ class CrudTemplate extends ApiController{
             'update' => ['method' => 'put', 'route' => '/'.$resource_name],
             'delete' => ['method' => 'delete', 'route' => '/'.$resource_name.'/@id:\d*'],
         ];
+
+        $intersections = array_intersect(array_keys($this->mappings), $not);
+        foreach($intersections as $intersection){
+            unset($this->mappings[$intersection]);
+        }
     }
 
     public function getAll(){
@@ -65,9 +72,10 @@ class CrudTemplate extends ApiController{
 
     public function create(){
         $data = Flight::request()->data->getData();
-        $resource= $this->resource->create($data);
 
-        Flight::json($resource->all()->getDictionary());
+        $resource = $this->resource->create($data);
+
+        $this->success("", [$this->resource->getTable() => $resource->toArray()]);
     }
 
     public function update(){
