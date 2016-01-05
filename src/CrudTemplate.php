@@ -95,7 +95,12 @@ class CrudTemplate extends ApiController{
     }
 
     public function delete($id){
-        Flight::json($this->resource->find($id)->delete());
+        $r = $this->resource->find($id);
+        if($r){
+            Flight::json($r->delete());
+        }else{
+            $this->success("Record alreaddy deleted");
+        }
     }
 
     private function getRelation($id, $relation)

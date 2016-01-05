@@ -37,7 +37,7 @@ abstract class ApiController{
 
     protected function getRequestData(){
         $data = Flight::request()->data->getdata();
-        if(count($data == 0)){
+        if(count($data) == 0){
             $data = Flight::request()->query->getdata();
         }
 
